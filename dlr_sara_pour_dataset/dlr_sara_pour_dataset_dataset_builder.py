@@ -8,7 +8,7 @@ import tensorflow_hub as hub
 import cv2
 
 class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
-    """DatasetBuilder for example dataset."""
+    """DatasetBuilder for DLR SARA Pour liquid dataset."""
 
     VERSION = tfds.core.Version('1.0.0')
     RELEASE_NOTES = {
@@ -20,7 +20,6 @@ class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
         self._embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder-large/5")
 
     def _info(self) -> tfds.core.DatasetInfo:
-        """Dataset metadata (homepage, citation,...)."""
         return self.dataset_info_from_configs(
             features=tfds.features.FeaturesDict({
                 'steps': tfds.features.Dataset({
@@ -34,15 +33,17 @@ class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
                         'state': tfds.features.Tensor(
                             shape=(6,),
                             dtype=np.float32,
-                            doc='Robot state, consists of [7x robot joint angles, '
-                                '2x gripper position, 1x door opening angle].',
+                            doc='Robot state, consists of [3x robot EEF position, '
+                                '3x robot EEF orientation yaw/pitch/roll calculated '
+                                'with scipy Rotation.as_euler(="zxy") Class].',
                         )
                     }),
                     'action': tfds.features.Tensor(
                         shape=(6,),
                         dtype=np.float32,
-                        doc='Robot action, consists of [7x joint velocities, '
-                            '2x gripper velocities, 1x terminate episode].',
+                        doc='Robot action, consists of [3x robot EEF position, '
+                                '3x robot EEF orientation yaw/pitch/roll calculated '
+                                'with scipy Rotation.as_euler(="zxy") Class].',
                     ),
                     'discount': tfds.features.Scalar(
                         dtype=np.float32,
@@ -65,7 +66,7 @@ class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
                         doc='True on last step of the episode if it is a terminal step, True for demos.'
                     ),
                     'language_instruction': tfds.features.Text(
-                        doc='Language Instruction.'
+                        doc='Pour into the mug.'
                     ),
                     'language_embedding': tfds.features.Tensor(
                         shape=(512,),
@@ -100,6 +101,8 @@ class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
             for i, step in enumerate(data):
                 # compute Kona language embedding
                 language_embedding = self._embed([step['language_instruction']])[0].numpy()
+
+                # Filter out small overshoots in action
                 for i, a in enumerate(step['action'][0:3]):
                     if a > 1.0:
                         a = 1.0
@@ -109,7 +112,7 @@ class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
 
                 episode.append({
                     'observation': {
-                        'image': cv2.cvtColor(step['image'], cv2.COLOR_BGR2RGB)
+                        'image': cv2.cvtColor(step['image'], cv2.COLOR_BGR2RGB),
                         # 'wrist_image': step['wrist_image'],
                         'state': step['state'],
                     },

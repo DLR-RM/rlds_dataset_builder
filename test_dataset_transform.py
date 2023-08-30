@@ -79,10 +79,10 @@ def check_elements(target, values):
 dataset_name = args.dataset_name
 print(f"Visualizing data from dataset: {dataset_name}")
 module = importlib.import_module(dataset_name)
-ds = tfds.load(dataset_name, split='train')
+ds = tfds.load(dataset_name, data_dir="/home_local/pada_ab/tensorflow_datasets", split='train')
 ds = ds.shuffle(100)
 
-for episode in tqdm.tqdm(ds.take(50)):
+for episode in tqdm.tqdm(ds.take(100)):
     steps = tfds.as_numpy(episode['steps'])
     for step in steps:
         transformed_step = transform_step(step)
