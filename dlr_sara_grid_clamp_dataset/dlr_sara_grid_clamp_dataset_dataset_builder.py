@@ -99,12 +99,7 @@ class DlrSaraGridClampDataset(tfds.core.GeneratorBasedBuilder):
                 language_embedding = self._embed([step["language_instruction"]])[0].numpy()
 
                 # Filter out small overshoots in action
-                for i, a in enumerate(step["action"][0:3]):
-                    if a > 1.0:
-                        a = 1.0
-                    if a < -1:
-                        a = -1.0
-                    step["action"][i] = a
+                step["action"][0:3] = np.clip(step["action"][0:3], -1.0, 1.0)
 
                 episode.append(
                     {
