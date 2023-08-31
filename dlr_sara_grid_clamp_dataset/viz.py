@@ -1,18 +1,18 @@
 import os
+from pathlib import Path
 
 import cv2
 import numpy as np
 
 if __name__ == "__main__":
-    data_dir = "data_filtered/train/"
-    backup_dir = "/data/train/"
+    backup_dir = str(Path(__file__).parent / "data/train/")
     # backup_dir = "data_bak_bak/train/"
-    file_list = os.listdir(data_dir)
+    file_list = os.listdir(backup_dir)
     number_of_episodes = 0
     number_of_successes = 0
     for i in range(len(file_list)):
         f = file_list[i]
-        data = np.load(os.path.join(data_dir, f), allow_pickle=True)  # this is a list of dicts in our case
+        data = np.load(os.path.join(backup_dir, f), allow_pickle=True)  # this is a list of dicts in our case
         # data_orig = np.load(os.path.join(backup_dir, f), allow_pickle=True)
         n_steps = len(data)
         number_of_episodes += 1

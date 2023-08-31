@@ -7,7 +7,7 @@ import tqdm
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"  # suppress debug warning messages
 import tensorflow_datasets as tfds
-from example_transform.transform import transform_step
+from dlr_sara_transform.transform import transform_step
 
 parser = argparse.ArgumentParser()
 parser.add_argument("dataset_name", help="name of the dataset to visualize")

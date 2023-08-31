@@ -23,4 +23,4 @@ check-codestyle:
 	# Reformat using black
 	black --check ${LINT_PATHS}
 
-commit-checks: format type lint
+commit-checks: format mypy lint

@@ -1,11 +1,11 @@
 import os
+from pathlib import Path
 
 import cv2
 import numpy as np
 
 if __name__ == "__main__":
-    data_dir = "data_filtered/train/"
-    backup_dir = "../dlr_sara_grid_clamp_dataset/data/train/"
+    backup_dir = str(Path(__file__).parent / "data/train/")
     # backup_dir = "data_bak_bak/train/"
     file_list = os.listdir(backup_dir)
     number_of_episodes = 0
