@@ -102,14 +102,6 @@ class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
                 # compute Kona language embedding
                 language_embedding = self._embed([step['language_instruction']])[0].numpy()
 
-                # Filter out small overshoots in action
-                for i, a in enumerate(step['action'][0:3]):
-                    if a > 1.0:
-                        a = 1.0
-                    if a < -1:
-                        a = -1.0
-                    step['action'][i] = a
-
                 episode.append({
                     'observation': {
                         'image': cv2.cvtColor(step['image'], cv2.COLOR_BGR2RGB),
