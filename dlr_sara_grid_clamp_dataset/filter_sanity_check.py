@@ -11,11 +11,11 @@ if __name__ == "__main__":
     for f in file_list:
         data = np.load(os.path.join(data_dir, f), allow_pickle=True)  # this is a list of dicts in our case
         data_orig = np.load(os.path.join(backup_dir, f), allow_pickle=True)
-        l = len(data)
+        n_steps = len(data)
         number_of_episodes += 1
         print(f"Episode: {f}")
-        for i in range(l):
-            if i < l - 1:
+        for i in range(n_steps):
+            if i < n_steps - 1:
                 step_t = data[i]
                 h_msr = Rotation.from_euler("zxy", step_t["state"][3:6])
                 h_msr = np.hstack((h_msr.as_matrix(), step_t["state"][0:3][np.newaxis].T))

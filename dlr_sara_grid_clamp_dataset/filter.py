@@ -13,12 +13,12 @@ if __name__ == "__main__":
 
     for f in file_list:
         data = np.load(os.path.join(data_dir, f), allow_pickle=True)  # this is a list of dicts in our case
-        l = len(data)
+        n_steps = len(data)
         number_of_episodes += 1
         print(f"Episode: {f}")
-        for i in range(l):
+        for i in range(n_steps):
             step_t = data[i]
-            if i < l - 1:
+            if i < n_steps - 1:
                 step_t_1 = data[i + 1]
                 h_msr = Rotation.from_euler("zxy", step_t["state"][3:6])
                 # print(step['state'][0:3][np.newaxis].T)

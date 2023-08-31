@@ -14,14 +14,14 @@ if __name__ == "__main__":
         f = file_list[i]
         data = np.load(os.path.join(backup_dir, f), allow_pickle=True)  # this is a list of dicts in our case
         # data_orig = np.load(os.path.join(backup_dir, f), allow_pickle=True)
-        l = len(data)
+        n_steps = len(data)
         number_of_episodes += 1
-        print(f"Episode: {f}, Is terminal : ", data[len(data) - 1]["is_terminal"])
-        if data[len(data) - 1]["is_terminal"]:
+        print(f"Episode: {f}, Is terminal : ", data[n_steps - 1]["is_terminal"])
+        if data[n_steps - 1]["is_terminal"]:
             number_of_successes += 1
 
-        for i in range(l):
-            cv2.imshow("image", data[i]["image"])
+        for step in range(n_steps):
+            cv2.imshow("image", data[step]["image"])
             cv2.waitKey(1)
 
         #     # print(f"Terminal : {data[i]['is_terminal']}, Success: {data[i]['is_success']}, Reward : {data[i]['reward']}")
