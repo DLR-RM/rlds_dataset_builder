@@ -1,10 +1,10 @@
 import copy
+import os
 import time
 
-import numpy as np
-import os
-from scipy.spatial.transform import Rotation
 import cv2
+import numpy as np
+from scipy.spatial.transform import Rotation
 
 if __name__ == "__main__":
     data_dir = "data_filtered/train/"
@@ -19,8 +19,8 @@ if __name__ == "__main__":
         # data_orig = np.load(os.path.join(backup_dir, f), allow_pickle=True)
         l = len(data)
         number_of_episodes += 1
-        print(f"Episode: {f}, Is terminal : ", data[len(data)-1]["is_terminal"])
-        if data[len(data)-1]["is_terminal"]:
+        print(f"Episode: {f}, Is terminal : ", data[len(data) - 1]["is_terminal"])
+        if data[len(data) - 1]["is_terminal"]:
             number_of_successes += 1
 
         for i in range(l):
