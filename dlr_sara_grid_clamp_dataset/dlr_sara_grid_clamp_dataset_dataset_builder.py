@@ -1,9 +1,8 @@
 import glob
-from typing import Any, Iterator, Tuple
+from typing import Any, ClassVar, Iterator, Tuple
 
 import cv2
 import numpy as np
-import tensorflow as tf
 import tensorflow_datasets as tfds
 import tensorflow_hub as hub
 
@@ -12,7 +11,7 @@ class DlrSaraGridClampDataset(tfds.core.GeneratorBasedBuilder):
     """DatasetBuilder for DLR SARA Pour liquid dataset."""
 
     VERSION = tfds.core.Version("1.0.0")
-    RELEASE_NOTES = {
+    RELEASE_NOTES: ClassVar = {
         "1.0.0": "Initial release.",
     }
 

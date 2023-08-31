@@ -1,10 +1,7 @@
-import copy
 import os
-import time
 
 import cv2
 import numpy as np
-from scipy.spatial.transform import Rotation
 
 if __name__ == "__main__":
     data_dir = "data_filtered/train/"
