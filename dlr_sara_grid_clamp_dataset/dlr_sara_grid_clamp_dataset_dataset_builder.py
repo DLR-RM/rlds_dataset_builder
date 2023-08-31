@@ -80,7 +80,7 @@ class DlrSaraGridClampDataset(tfds.core.GeneratorBasedBuilder):
     def _split_generators(self, dl_manager: tfds.download.DownloadManager):
         """Define data splits."""
         return {
-            "train": self._generate_examples(path="data/train/episode_*.npy"),
+            "train": self._generate_examples(path="data_filtered/train/episode_*.npy"),
             # 'val': self._generate_examples(path='data/val/episode_*.npy'),
         }
 
@@ -93,9 +93,11 @@ class DlrSaraGridClampDataset(tfds.core.GeneratorBasedBuilder):
 
             # assemble episode --> here we're assuming demos so we set reward to 1 at the end
             episode = []
+            # Same embeddings for all steps
+            language_embedding = self._embed([data[0]["language_instruction"]])[0].numpy()
+
             for i, step in enumerate(data):
                 # compute Kona language embedding
-                language_embedding = self._embed([step["language_instruction"]])[0].numpy()
 
                 # Filter out small overshoots in action
                 step["action"][0:3] = np.clip(step["action"][0:3], -1.0, 1.0)
