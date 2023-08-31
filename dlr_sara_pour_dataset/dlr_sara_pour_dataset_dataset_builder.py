@@ -105,7 +105,7 @@ class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
                             # 'wrist_image': step['wrist_image'],
                             "state": step["state"],
                         },
-                        "action": step["action"],
+                        "action": step["action"].astype(np.float32),
                         "discount": 1.0,
                         "reward": step["reward"],
                         "is_first": i == 0,

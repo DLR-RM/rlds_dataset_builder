@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
             else:
                 delta = np.zeros(6)
-            step_t["action"] = delta
+            step_t["action"] = delta.astype(np.float32)
             data[i] = copy.deepcopy(step_t)
             # print(i, len(data))
         np.save(os.path.join(save_dir, f), data)
