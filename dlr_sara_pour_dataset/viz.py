@@ -29,4 +29,4 @@ if __name__ == "__main__":
         # time.sleep(5)
         # if number_of_episodes > 2:
         #     break
-    print(f"NUmber of successes : {number_of_successes}")
+    print(f"Number of successes : {number_of_successes}")
