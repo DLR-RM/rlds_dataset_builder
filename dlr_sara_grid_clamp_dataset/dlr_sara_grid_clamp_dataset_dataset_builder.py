@@ -93,12 +93,11 @@ class DlrSaraGridClampDataset(tfds.core.GeneratorBasedBuilder):
 
             # assemble episode --> here we're assuming demos so we set reward to 1 at the end
             episode = []
+            # compute Kona language embedding
             # Same embeddings for all steps
-            language_embedding = self._embed([data[0]["language_instruction"]])[0].numpy()
+            language_embedding = self._embed(["Place grid clamp"])[0].numpy()
 
             for i, step in enumerate(data):
-                # compute Kona language embedding
-
                 # Filter out small overshoots in action
                 step["action"][0:3] = np.clip(step["action"][0:3], -1.0, 1.0)
 
