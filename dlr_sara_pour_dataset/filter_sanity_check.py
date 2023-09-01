@@ -34,7 +34,7 @@ if __name__ == "__main__":
                 step_t_1_orig = data_orig[i + 1]
                 # print(f"step_t_1[state]: {step_t_1_orig['state']}")
                 if np.linalg.norm(h_msr_t_1 - step_t_1_orig["state"]) > 5e-9:
-                    print(np.linalg.norm(h_msr_t_1 - step_t_1_orig["state"]))
+                    print(np.linalg.norm(h_msr_t_1 - step_t_1_orig["state"][0:6]))
                 # print()
         # if number_of_episodes > 2:
         #     break

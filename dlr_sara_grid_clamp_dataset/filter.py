@@ -40,6 +40,7 @@ if __name__ == "__main__":
 
             else:
                 delta = np.zeros(6)
+            delta = np.hstack((delta, np.ones(1)))
             step_t["action"] = delta.astype(np.float32)
             data[i] = copy.deepcopy(step_t)
             # print(i, len(data))

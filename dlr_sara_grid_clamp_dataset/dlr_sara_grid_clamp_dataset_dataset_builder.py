@@ -43,7 +43,7 @@ class DlrSaraGridClampDataset(tfds.core.GeneratorBasedBuilder):
                                 }
                             ),
                             "action": tfds.features.Tensor(
-                                shape=(6,),
+                                shape=(7,),
                                 dtype=np.float32,
                                 doc="Robot action, consists of [3x robot EEF position, "
                                 "3x robot EEF orientation yaw/pitch/roll calculated "
@@ -80,7 +80,7 @@ class DlrSaraGridClampDataset(tfds.core.GeneratorBasedBuilder):
     def _split_generators(self, dl_manager: tfds.download.DownloadManager):
         """Define data splits."""
         return {
-            "train": self._generate_examples(path="data_filtered/train/episode_*.npy"),
+            "train": self._generate_examples(path="data_filtered_filtered/train/episode_*.npy"),
             # 'val': self._generate_examples(path='data/val/episode_*.npy'),
         }
 

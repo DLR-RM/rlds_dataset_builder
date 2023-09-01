@@ -68,7 +68,7 @@ def vis_stats(vector, vector_mean, tag):
     fig = plt.figure(tag, figsize=(5 * n_elems, 5))
     for elem in range(n_elems):
         plt.subplot(1, n_elems, elem + 1)
-        plt.hist(vector[:, elem], bins=20)
+        plt.hist(vector[:, elem], bins=500)
         plt.title(vector_mean[elem])
 
     if render_wandb:

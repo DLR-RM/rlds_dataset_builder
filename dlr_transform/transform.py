@@ -66,7 +66,7 @@ def transform_step(step: Dict[str, Any]) -> Dict[str, Any]:
         "observation": {
             "image": np.array(img),
         },
-        "action": np.concatenate([step["action"], [np.float32(1)], [step["is_terminal"]]]),
+        "action": np.concatenate([step["action"], [step["is_terminal"]]]),
     }
 
     # copy over all other fields unchanged
