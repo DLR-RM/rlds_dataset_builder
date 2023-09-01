@@ -95,7 +95,8 @@ class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
             episode = []
             # compute Kona language embedding
             # Same embeddings for all steps
-            language_embedding = self._embed(["Pour into the mug"])[0].numpy()
+            language_instruction = "Pour into the mug"
+            language_embedding = self._embed([language_instruction])[0].numpy()
             for i, step in enumerate(data):
                 episode.append(
                     {
@@ -106,11 +107,11 @@ class DlrSaraPourDataset(tfds.core.GeneratorBasedBuilder):
                         },
                         "action": step["action"].astype(np.float32),
                         "discount": 1.0,
-                        "reward": step["reward"],
+                        "reward": np.float32(step["is_terminal"]),
                         "is_first": i == 0,
                         "is_last": i == (len(data) - 1),
                         "is_terminal": step["is_terminal"],
-                        "language_instruction": step["language_instruction"],
+                        "language_instruction": language_instruction,
                         "language_embedding": language_embedding,
                     }
                 )
