@@ -5,7 +5,7 @@ from scipy.spatial.transform import Rotation
 
 if __name__ == "__main__":
     data_dir = "data_filtered/train/"
-    backup_dir = "data/train/"
+    backup_dir = "data_bak_bak/train/"
     file_list = os.listdir(data_dir)
     number_of_episodes = 0
     for f in file_list:
@@ -20,20 +20,21 @@ if __name__ == "__main__":
                 h_msr = Rotation.from_euler("zxy", step_t["state"][3:6])
                 h_msr = np.hstack((h_msr.as_matrix(), step_t["state"][0:3][np.newaxis].T))
                 h_msr = np.vstack((h_msr, np.array([0, 0, 0, 1])))
-                print(f"step_t[state]: {step_t['state']}")
+                # print(f"step_t[state]: {step_t['state']}")
 
                 delta = Rotation.from_euler("zxy", step_t["action"][3:6])
                 delta = np.hstack((delta.as_matrix(), step_t["action"][0:3][np.newaxis].T))
                 delta = np.vstack((delta, np.array([0, 0, 0, 1])))
 
-                h_msr_t_1 = h_msr.dot(delta)
+                # h_msr_t_1 = h_msr.dot(delta)
+                h_msr_t_1 = delta.dot(h_msr)
                 h_msr_t_1 = np.hstack((h_msr_t_1[:3, 3], Rotation.from_matrix(h_msr_t_1[:3, :3]).as_euler("zxy")))
-                print(f"step_t_1_estimated: {h_msr_t_1}")
+                # print(f"step_t_1_estimated: {h_msr_t_1}")
 
                 step_t_1_orig = data_orig[i + 1]
-                print(f"step_t_1[state]: {step_t_1_orig['state']}")
-                if np.linalg.norm(h_msr_t_1 - step_t_1_orig["state"]) > 0.000000000000005:
+                # print(f"step_t_1[state]: {step_t_1_orig['state']}")
+                if np.linalg.norm(h_msr_t_1 - step_t_1_orig["state"]) > 5e-9:
                     print(np.linalg.norm(h_msr_t_1 - step_t_1_orig["state"]))
-                print()
-        if number_of_episodes > 2:
-            break
+                # print()
+        # if number_of_episodes > 2:
+        #     break
