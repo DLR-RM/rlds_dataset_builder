@@ -25,13 +25,13 @@ class DlrEdanToytestDataset(tfds.core.GeneratorBasedBuilder):
                 'steps': tfds.features.Dataset({
                     'observation': tfds.features.FeaturesDict({
                         'image': tfds.features.Image(
-                            shape=(480, 640, 3),
+                            shape=(360, 640, 3),
                             dtype=np.uint8,
                             encoding_format='png',
                             doc='Main camera RGB observation.',
                         ),
                         'state': tfds.features.Tensor(
-                            shape=(6,),
+                            shape=(7,),
                             dtype=np.float32,
                             doc='Robot state, consists of [3x robot EEF position, '
                                 '3x robot EEF orientation yaw/pitch/roll calculated '
@@ -39,7 +39,7 @@ class DlrEdanToytestDataset(tfds.core.GeneratorBasedBuilder):
                         )
                     }),
                     'action': tfds.features.Tensor(
-                        shape=(6,),
+                        shape=(7,),
                         dtype=np.float32,
                         doc='Robot action, consists of [3x robot EEF position, '
                                 '3x robot EEF orientation yaw/pitch/roll calculated '
@@ -102,7 +102,7 @@ class DlrEdanToytestDataset(tfds.core.GeneratorBasedBuilder):
             for i, step in enumerate(data):
                 # compute Kona language embedding
                 language_embedding = self._embed([step['language_instruction']])[0].numpy()
-
+                gripper = np.float32(step['observation']['state'][-1])
                 # add reward to non-terminal states
                 if  'reward' in step: 
                     reward_ = step['reward']
@@ -112,9 +112,9 @@ class DlrEdanToytestDataset(tfds.core.GeneratorBasedBuilder):
                     'observation': {
                         'image': cv2.cvtColor(step['observation']['image'], cv2.COLOR_BGR2RGB),
                         # 'wrist_image': step['wrist_image'],
-                        'state': step['observation']['state'],
+                        'state':  np.float32(step['observation']['state']),
                     },
-                    'action': step['action'],
+                    'action': np.float32(np.append(step['action'][0:6], gripper)), # terminal already have gripper, others not
                     'discount': 1.0,
                     'reward': reward_,
                     'is_first': i == 0,
