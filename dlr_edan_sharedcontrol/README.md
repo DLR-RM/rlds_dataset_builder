@@ -2,7 +2,7 @@
 Multiple tasks on the assistive robot edan
 
 - observation : 
-    - image : shape=(480, 640, 3),
+    - image : shape=(360, 640, 3),
 
     - state : Robot state, consists of 
         - 3x robot EEF position, 
