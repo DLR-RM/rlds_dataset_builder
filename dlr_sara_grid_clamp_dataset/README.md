@@ -1,3 +1,5 @@
+# Robot learns to place a grid clamp into the grids on the table.
+
 
 - observation : 
     - image : shape=(480, 640, 3),
