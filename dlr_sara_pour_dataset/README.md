@@ -1,3 +1,4 @@
+# Robot learns to pour liquid from a thermos held in end-effector gripper into the mug placed on the table. 
 
 - observation : 
     - image : shape=(480, 640, 3),
