@@ -25,33 +25,17 @@ if __name__ == "__main__":
 
 
         for i in range(len(data)):
-            #if i<5:
-            #    continue 
-            #if i>len(data)-5:
-            #    continue
-            print(f"run {run} -- timestamp {i}")
-            print(data[i]["is_terminal"])
-            if (data[i]["is_terminal"]):
-                print("AAAAAAAAAAAAAAa")
             action = data[i]['action']
-            print(action)
             state = data[i]["observation"]["state"]
             x.append(state[0])
             y.append(state[1])
             z.append(state[2])
             g.append(state[6])
-            print(action[0], action[1], action[2])
             img.append( data[i]["observation"]["image"])
-            #print(f"Terminal : {data[i]['is_terminal']}")
-            #print(data[i]['reward'])
-            print(f"LI : {data[i]['language_instruction']}")
-            #print("normal state",all_data)
-            
-            #print(f"state : {state}")
-            plt.ion() # Interactive mode on
+    plt.ion() # Interactive mode on
 
     fig, ax_list = plt.subplots(nrows=2)
-    print(y)
+
     for j in range(len(x)):
         ax_list[0].cla()
         ax_list[0].set_ylim([-1, 1])
