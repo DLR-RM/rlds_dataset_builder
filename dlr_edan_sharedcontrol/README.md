@@ -1,5 +1,5 @@
 
-Multiple tasks on the assistive robot edan
+Multiple tasks on the assistive robot edan, using Shared Control Templates.
 
 - observation : 
     - image : shape=(360, 640, 3),

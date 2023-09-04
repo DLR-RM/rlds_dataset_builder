@@ -7,7 +7,7 @@ import tensorflow_datasets as tfds
 import tensorflow_hub as hub
 import cv2
 
-class DlrEdanToytestDataset(tfds.core.GeneratorBasedBuilder):
+class DlrEdanSharedControlDataset(tfds.core.GeneratorBasedBuilder):
     """DatasetBuilder for DLR SARA Pour liquid dataset."""
 
     VERSION = tfds.core.Version('1.0.0')
