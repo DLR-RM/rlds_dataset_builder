@@ -5,10 +5,10 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import tensorflow_hub as hub
+import cv2
 
-
-class ExampleDataset(tfds.core.GeneratorBasedBuilder):
-    """DatasetBuilder for example dataset."""
+class DlrEdanSharedControlDataset(tfds.core.GeneratorBasedBuilder):
+    """DatasetBuilder for DLR SARA Pour liquid dataset."""
 
     VERSION = tfds.core.Version('1.0.0')
     RELEASE_NOTES = {
@@ -20,35 +20,30 @@ class ExampleDataset(tfds.core.GeneratorBasedBuilder):
         self._embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder-large/5")
 
     def _info(self) -> tfds.core.DatasetInfo:
-        """Dataset metadata (homepage, citation,...)."""
         return self.dataset_info_from_configs(
             features=tfds.features.FeaturesDict({
                 'steps': tfds.features.Dataset({
                     'observation': tfds.features.FeaturesDict({
                         'image': tfds.features.Image(
-                            shape=(64, 64, 3),
+                            shape=(360, 640, 3),
                             dtype=np.uint8,
                             encoding_format='png',
                             doc='Main camera RGB observation.',
                         ),
-                        'wrist_image': tfds.features.Image(
-                            shape=(64, 64, 3),
-                            dtype=np.uint8,
-                            encoding_format='png',
-                            doc='Wrist camera RGB observation.',
-                        ),
                         'state': tfds.features.Tensor(
-                            shape=(10,),
+                            shape=(7,),
                             dtype=np.float32,
-                            doc='Robot state, consists of [7x robot joint angles, '
-                                '2x gripper position, 1x door opening angle].',
+                            doc='Robot state, consists of [3x robot EEF position, '
+                                '3x robot EEF orientation yaw/pitch/roll calculated '
+                                'with scipy Rotation.as_euler(="zxy") Class].',
                         )
                     }),
                     'action': tfds.features.Tensor(
-                        shape=(10,),
+                        shape=(7,),
                         dtype=np.float32,
-                        doc='Robot action, consists of [7x joint velocities, '
-                            '2x gripper velocities, 1x terminate episode].',
+                        doc='Robot action, consists of [3x robot EEF position, '
+                                '3x robot EEF orientation yaw/pitch/roll calculated '
+                                'with scipy Rotation.as_euler(="zxy") Class].',
                     ),
                     'discount': tfds.features.Scalar(
                         dtype=np.float32,
@@ -71,7 +66,7 @@ class ExampleDataset(tfds.core.GeneratorBasedBuilder):
                         doc='True on last step of the episode if it is a terminal step, True for demos.'
                     ),
                     'language_instruction': tfds.features.Text(
-                        doc='Language Instruction.'
+                        doc='Pour into the mug.'
                     ),
                     'language_embedding': tfds.features.Tensor(
                         shape=(512,),
@@ -90,8 +85,9 @@ class ExampleDataset(tfds.core.GeneratorBasedBuilder):
     def _split_generators(self, dl_manager: tfds.download.DownloadManager):
         """Define data splits."""
         return {
-            'train': self._generate_examples(path='data/train/episode_*.npy'),
-            'val': self._generate_examples(path='data/val/episode_*.npy'),
+            #train': self._generate_examples(path='data/train/episode_*.npy'),
+            'train': self._generate_examples(path='data/train/*.npy'),
+            # 'val': self._generate_examples(path='data/val/episode_*.npy'),
         }
 
     def _generate_examples(self, path) -> Iterator[Tuple[str, Any]]:
@@ -106,19 +102,24 @@ class ExampleDataset(tfds.core.GeneratorBasedBuilder):
             for i, step in enumerate(data):
                 # compute Kona language embedding
                 language_embedding = self._embed([step['language_instruction']])[0].numpy()
-
+                gripper = np.float32(step['observation']['state'][-1])
+                # add reward to non-terminal states
+                if  'reward' in step: 
+                    reward_ = step['reward']
+                else:
+                    reward_ = 0.
                 episode.append({
                     'observation': {
-                        'image': step['image'],
-                        'wrist_image': step['wrist_image'],
-                        'state': step['state'],
+                        'image': cv2.cvtColor(step['observation']['image'], cv2.COLOR_BGR2RGB),
+                        # 'wrist_image': step['wrist_image'],
+                        'state':  np.float32(step['observation']['state']),
                     },
-                    'action': step['action'],
+                    'action': np.float32(np.append(step['action'][0:6], gripper)), # terminal already have gripper, others not
                     'discount': 1.0,
-                    'reward': float(i == (len(data) - 1)),
+                    'reward': reward_,
                     'is_first': i == 0,
                     'is_last': i == (len(data) - 1),
-                    'is_terminal': i == (len(data) - 1),
+                    'is_terminal': step['is_terminal'],
                     'language_instruction': step['language_instruction'],
                     'language_embedding': language_embedding,
                 })

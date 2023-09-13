@@ -1,4 +1,8 @@
 */data
+*/data_bak
+*/data_bak_bak
+*/data_filtered
+*/data_filtered_filtered
 wandb
 __pycache__
 .idea
