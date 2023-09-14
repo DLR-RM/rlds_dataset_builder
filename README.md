@@ -1,3 +1,10 @@
+# RT-X dataset 
+Please find the dataset here: 
+
+https://b2drop.eudat.eu/s/rQyPp6yBof4SC7D
+
+
+
 # RLDS Dataset Conversion
 
 This repo demonstrates how to convert an existing dataset into RLDS format for X-embodiment experiment integration.
